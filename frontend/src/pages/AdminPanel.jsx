@@ -41,7 +41,7 @@ const AdminPanel = () => {
   return (
     <div className="admin-panel">
       <div className="dashboard-header">
-        <h1>Admin Panel 🔐</h1>
+        <h1>Admin Panel </h1>
         <p>Manage all users</p>
       </div>
 
