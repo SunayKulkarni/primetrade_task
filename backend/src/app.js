@@ -8,23 +8,23 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 
 const connectDB = require('./config/db');
+const logger = require('./utils/logger');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
 
-
+// Connect to DB
 connectDB();
 
-
+// Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-if (process.env.NODE_ENV !== 'production') {
-  app.use(morgan('dev'));
-}
+// HTTP request logging with Morgan -> Winston
+app.use(morgan('combined', { stream: logger.stream }));
 
-
+// Swagger docs
 const swaggerDocument = YAML.load(path.join(__dirname, '../docs/swagger.yaml'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
