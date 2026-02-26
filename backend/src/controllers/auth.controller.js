@@ -4,7 +4,7 @@ const { successResponse, errorResponse } = require('../utils/apiResponse');
 const { generateToken } = require('../utils/generateToken');
 
 // POST /auth/register
-const register = async (req, res, next) => {
+const register = async (req, res) => {
   try {
     const { error, value } = registerSchema.validate(req.body);
     if (error) {
@@ -32,12 +32,13 @@ const register = async (req, res, next) => {
       201
     );
   } catch (err) {
-    next(err);
+    console.error(err);
+    return errorResponse(res, err.message || 'Server error', 500);
   }
 };
 
 // POST /auth/login
-const login = async (req, res, next) => {
+const login = async (req, res) => {
   try {
     const { error, value } = loginSchema.validate(req.body);
     if (error) {
@@ -67,12 +68,13 @@ const login = async (req, res, next) => {
       'Login successful'
     );
   } catch (err) {
-    next(err);
+    console.error(err);
+    return errorResponse(res, err.message || 'Server error', 500);
   }
 };
 
 // GET /auth/me - get currently authenticated user
-const getMe = async (req, res, next) => {
+const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
     if (!user) {
@@ -80,7 +82,8 @@ const getMe = async (req, res, next) => {
     }
     return successResponse(res, { user });
   } catch (err) {
-    next(err);
+    console.error(err);
+    return errorResponse(res, err.message || 'Server error', 500);
   }
 };
 
